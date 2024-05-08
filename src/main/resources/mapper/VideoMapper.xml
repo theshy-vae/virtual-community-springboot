@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baidu.tieba.mapper.VideoMapper">
+    <resultMap id="CommentVO" type="com.baidu.tieba.model.vo.CommentVO">
+        <result property="id" column="id"/>
+        <result property="content"    column="content"/>
+        <result property="createTime" column="create_time"/>
+        <result property="topicId"    column="topic_id"/>
+        <result property="userId"     column="user_id"/>
+        <result property="username"   column="username"/>
+        <result property="avatar"     column="avatar"/>
+        <result property="floor"      column="floor"/>
+    </resultMap>
+
+    <select id="selectFourHotVideo" resultType="com.baidu.tieba.model.entity.Video">
+        select * from video
+        order by video.count desc
+        limit 4
+    </select>
+</mapper>
+
