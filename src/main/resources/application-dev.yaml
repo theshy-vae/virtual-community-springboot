@@ -1,0 +1,46 @@
+server:
+  port: 8000
+
+web:
+  domain: http://localhost
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/tieba?serverTimezone=GMT%2B8  #120.79.95.69
+    username: root
+    password: 123456
+  servlet:
+    multipart:
+      max-file-size: 1024MB #设置为1TB
+      max-request-size: 1024MB #设置为1TB
+  mail:
+    protocol: smtps
+    #配置SMTP服务器地址
+    host: smtp.163.com
+    #发送者邮箱
+    username: yufengling0223@163.com
+    #配置密码
+    password: CWXPDZNRVNVJGWRA
+    #端口号
+    port: 465
+    default-encoding: UTF-8
+  mvc:
+    static-path-pattern: /static/**
+  web:
+    resources:
+      static-locations: classpath:/static/
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启sql日志
+
+aliyun:
+  endpoint: oss-cn-shenzhen.aliyuncs.com
+  access-key-id: LTAI5t7MsVHuNtzGSebVgmnq
+  access-key-secret: wd3T2ED6kzyEteuuYz5OSCaNQNwGFh
+  bucket-name: yufengling
+  url-prefix: https://yufengling.oss-cn-shenzhen.aliyuncs.com/
+
+
+

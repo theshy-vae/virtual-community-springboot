@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baidu.tieba.mapper.CommentMapper">
+    <resultMap id="CommentVO" type="com.baidu.tieba.model.vo.CommentVO">
+        <result property="id" column="id"/>
+        <result property="content"    column="content"/>
+        <result property="createTime" column="create_time"/>
+        <result property="topicId"    column="topic_id"/>
+        <result property="userId"     column="user_id"/>
+        <result property="username"   column="username"/>
+        <result property="avatar"     column="avatar"/>
+        <result property="floor"      column="floor"/>
+    </resultMap>
+
+    <select id="getCommentsById" resultMap="CommentVO">
+        select c.*,u.username,u.avatar from comment c,user u
+        <where>
+            c.user_id = u.id and topic_id = #{id}
+            <if test="tab=='only'">
+                and c.user_id = #{userId}
+            </if>
+        </where>
+        order by c.create_time
+    </select>
+</mapper>
+

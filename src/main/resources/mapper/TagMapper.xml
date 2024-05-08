@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baidu.tieba.mapper.TagMapper">
+    <resultMap id="postVO" type="com.baidu.tieba.model.vo.PostVO">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="user_id" property="userId"/>
+        <result column="comments" property="comments"/>
+        <result column="view" property="view"/>
+        <result column="collects" property="collects"/>
+        <result column="top" property="top"/>
+        <result column="essence" property="essence"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="username" property="username"/>
+        <result column="alias" property="alias"/>
+        <result column="avatar" property="avatar"/>
+        <result column="content" property="content"/>
+    </resultMap>
+
+    <resultMap id="parentTagVO" type="com.baidu.tieba.model.vo.ParentTagVO">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="image" property="avatar"/>
+    </resultMap>
+
+    <resultMap id="myTagVO" type="com.baidu.tieba.model.vo.MyTagVO">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="image" property="avatar"/>
+    </resultMap>
+    <select id="getList" resultMap="postVO">
+        SELECT
+        t.id,t.title,t.user_id,t.comments,
+        t.view,t.collects,t.top,t.thumbsUp,
+        t.create_time ,t.modify_time ,t.content,
+        u.username,u.alias, u.avatar
+        FROM post t
+        , user u
+        <where>
+            t.user_id = u.id
+            and (t.content LIKE concat('%',#{search},'%')
+            or t.title like concat('%',#{search},'%'))
+
+            <if test="list != null and list.size()>0">
+                and t.id in
+                <foreach collection="list" open="(" close=")" separator="," item="item">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="tab == 'hot'">
+                and date(t.modify_time) &lt;= date_add(curdate(),interval 1 day)
+                and date(t.modify_time) &gt;= date_sub(curdate(),interval 6000 day)
+            </if>
+
+            <if test="tab != 'hot'">
+                order by t.create_time desc
+            </if>
+            <if test="tab == 'hot'">
+                order by t.view desc, t.create_time desc
+            </if>
+        </where>
+
+    </select>
+
+    <select id="getHotTags" resultType="com.baidu.tieba.model.entity.Tag">
+        select * from tag t order by t.topic_count desc limit 4
+    </select>
+
+    <!--用户关注了哪些吧-->
+    <select id="getParentTags" resultMap="parentTagVO">
+        select t.id,t.name,t.image from tag t,user_tag u
+        where t.id = u.tag_id and u.user_id = #{userId}
+    </select>
+
+    <!--用户建立的吧-->
+    <select id="listMyTag" resultMap="myTagVO">
+        select t.id,t.name,t.image from tag t
+        where t.bigManager = #{username}
+    </select>
+</mapper>
+

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baidu.tieba.mapper.TopicMapper">
+    <resultMap id="topicVO" type="com.baidu.tieba.model.vo.PostVO">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="user_id" property="userId"/>
+        <result column="comments" property="comments"/>
+        <result column="view" property="view"/>
+        <result column="collects" property="collects"/>
+        <result column="top" property="top"/>
+        <result column="essence" property="essence"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="username" property="username"/>
+        <result column="alias" property="alias"/>
+        <result column="avatar" property="avatar"/>
+        <result column="content" property="content"/>
+    </resultMap>
+
+    <select id="selectListAndPage" resultMap="topicVO">
+        SELECT
+        t.id,t.title,t.user_id,t.comments,
+        t.view,t.collects,t.top,t.thumbsUp,
+        t.create_time ,t.modify_time ,t.content,
+        u.username,u.alias, u.avatar
+        FROM post t
+        , user u
+        <where>
+                t.user_id = u.id
+
+            <if test="tab == 'hot'">
+                and date(t.create_time) &lt;= date_add(curdate(), interval 1 day)
+                and date(t.create_time) &gt;= date_sub(curdate(), interval 6000 day)
+            </if>
+        </where>
+
+        and (t.title LIKE concat('%',#{search},'%') or t.content LIKE concat('%',#{search},'%'))
+
+        <if test="tab != 'hot'">
+            order by t.create_time desc
+        </if>
+        <if test="tab == 'hot'">
+            order by t.view desc, t.create_time desc
+        </if>
+    </select>
+
+    <select id="getRecommend" resultType="com.baidu.tieba.model.entity.Post">
+        select * from post t
+        where t.id != #{id}
+        order by rand()
+        limit 5
+    </select>
+</mapper>
+
