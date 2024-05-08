@@ -19,9 +19,9 @@ spring:
     #配置SMTP服务器地址
     host: smtp.163.com
     #发送者邮箱
-    username: yufengling0223@163.com
+    username:
     #配置密码
-    password: CWXPDZNRVNVJGWRA
+    password:
     #端口号
     port: 465
     default-encoding: UTF-8
@@ -36,11 +36,11 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启sql日志
 
 aliyun:
-  endpoint: oss-cn-shenzhen.aliyuncs.com
-  access-key-id: LTAI5t7MsVHuNtzGSebVgmnq
-  access-key-secret: wd3T2ED6kzyEteuuYz5OSCaNQNwGFh
-  bucket-name: yufengling
-  url-prefix: https://yufengling.oss-cn-shenzhen.aliyuncs.com/
+  endpoint:
+  access-key-id:
+  access-key-secret:
+  bucket-name:
+  url-prefix:
 
 
 
